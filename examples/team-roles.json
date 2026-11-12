@@ -1,0 +1,33 @@
+{
+  "owner": "owner@example.com",
+  "members": {
+    "ui@example.com": "designer",
+    "dev@example.com": "coder",
+    "qa@example.com": "tester",
+    "api@example.com": "backend",
+    "stats@example.com": "analytics",
+    "release@example.com": "publisher",
+    "legal@example.com": "lawyer",
+    "ui2@example.com": { "role": "designer", "can": ["src/shop/services/"] }
+  },
+  "roles": {
+    "designer": {
+      "can": [
+        "src/*/pages/", "src/*/widgets/", "src/styles/", "src/l10n/", "assets/",
+        "src/*/data/", "src/*/services/demo_*",
+        { "path": "src/*/models/", "unless": "toJson|fromJson|toMap|fromMap" }
+      ]
+    },
+    "coder": {
+      "can": ["src/", "test/", "!src/*/pages/", "!src/*/widgets/", "!src/styles/", "!src/l10n/"]
+    },
+    "tester": { "can": ["docs/issues/"] },
+    "backend": { "can": ["server/", "functions/", "database.rules.json", "firestore.indexes.json"] },
+    "analytics": { "can": [{ "path": "**", "if": "logEvent|analytics\\.|track\\(" }] },
+    "publisher": { "can": ["store/", "fastlane/", ".github/workflows/", "android/app/build.gradle", "ios/Runner/Info.plist"] },
+    "lawyer": { "can": ["legal/", "src/l10n/legal_*"] }
+  },
+  "ownerOnly": ["CLAUDE.md", "AGENTS.md"],
+  "notes": "docs/notes/",
+  "rules": "docs/RULES.md"
+}

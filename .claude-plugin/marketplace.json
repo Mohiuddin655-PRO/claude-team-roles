@@ -1,0 +1,5 @@
+{
+  "name": "team-roles",
+  "owner": { "name": "mohiuddin" },
+  "plugins": [{ "name": "team-roles", "source": "./" }]
+}
