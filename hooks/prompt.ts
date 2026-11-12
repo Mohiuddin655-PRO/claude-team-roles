@@ -31,7 +31,7 @@ export function promptFor(config: Config | null, email: string, access: Access |
   }
   if (access.isOwner) {
     return [
-      `team-roles: this device (${email}) is the project's owner and may change everything.`,
+      `team-roles: this device (${email}) is the project's owner and may change everything; what it should change is up to the project's own rules.`,
       `When the owner asks in plain words to give, change or take back someone's role or paths, edit \`members\` in ${CONFIG}. ${ASK}`,
       SETUP,
       NOTES(config),
