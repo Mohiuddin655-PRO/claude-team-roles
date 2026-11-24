@@ -23,9 +23,31 @@ export type Config = {
   notes?: string
   /** The project's own rules files, read to Claude on every request; only the owner changes them. */
   rules?: string | string[]
+  /** Values taken from the first rules file: a name to the label of its `- <label>: \`value\`` line. `{name}`
+   * anywhere else in the config becomes that value; one not found becomes a character no email or path has. */
+  vars?: Record<string, string>
 }
 
 export const rulesOf = (config: Config) => [config.rules ?? []].flat()
+
+const escaped = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+/** `config` with its `vars` filled in from `rules`, the first rules file's text; `rules` itself is kept as written. */
+export function resolve(config: Config, rules: string): Config {
+  const values: Record<string, string> = {}
+  for (const [name, label] of Object.entries(config.vars ?? {})) {
+    const found = new RegExp(`^- ${escaped(label)}:\\s*\`([^\`]+)\``, 'm').exec(rules)
+    if (found) values[name] = found[1].trim().replace(/\/+$/, '')
+  }
+  const fill = (v: unknown): unknown => {
+    if (typeof v === 'string') return v.replace(/\{(\w+)\}/g, (_, name: string) => values[name] ?? '\u0000')
+    if (Array.isArray(v)) return v.map(fill)
+    if (v && typeof v === 'object') return Object.fromEntries(Object.entries(v).map(([k, x]) => [fill(k), fill(x)]))
+    return v
+  }
+  const { rules: files, vars, ...rest } = config
+  return { ...(fill(rest) as Config), rules: files, vars }
+}
 
 export type Note = { path: string; authors: string[]; text: string }
 

@@ -72,6 +72,7 @@ See [examples/team-roles.json](examples/team-roles.json).
 
 - `can` paths are globs from the repository's root: `*` is one folder level, `**` any depth, a trailing `/` the folder and everything under it, `!` in front takes a path back out. As in `.gitignore`, the last line that matches decides.
 - `{ "path": "...", "if": "regex", "unless": "regex" }` allows an edit only when its text matches `if`, and not when it matches `unless`.
+- `vars` takes values from the first `rules` file, so they are written once: `"vars": { "app": "App folder", "owner": "Owner" }` reads the `- App folder: \`apps/user\`` and `- Owner: \`owner@example.com\`` lines, and `{app}` and `{owner}` anywhere else in the config (such as `"owner": "{owner}"` or `"{app}/lib/pages/"`) become those values. `rules` itself is written out.
 - `ownerOnly` lists more files only the owner changes. `.claude/team-roles.json` and `.claude/settings*.json` are always the owner's.
 
 ## Permission notes

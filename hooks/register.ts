@@ -1,5 +1,5 @@
 import type { EngineInterface, Register } from 'claude-code'
-import { CONFIG, accessOf, mayChange, rulesOf, type Access, type Config, type Note } from './access.ts'
+import { CONFIG, accessOf, mayChange, resolve, rulesOf, type Access, type Config, type Note } from './access.ts'
 import { promptFor } from './prompt.ts'
 import { GENERAL } from './rules.ts'
 
@@ -41,6 +41,9 @@ async function device($: EngineInterface): Promise<Device> {
   } catch {
     return { root, email, config: null, access: null }
   }
+  const first = rulesOf(config)[0]
+  const text = first ? await $.fs.read(`${root}/${first}`).catch(() => '') : ''
+  config = resolve(config, typeof text === 'string' ? text : '')
   const notes = config.notes ? await notesIn($, root, config.notes) : []
   return { root, email, config, access: accessOf(config, email, notes) }
 }
