@@ -1,5 +1,5 @@
 {
   "name": "team-roles",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Gives each teammate's device a role, so Claude changes only the files that role owns; works in any language, framework or platform."
 }
